@@ -1,0 +1,6 @@
+@DesafioTaskrow_HostAddress = http://localhost:5186
+
+GET {{DesafioTaskrow_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
