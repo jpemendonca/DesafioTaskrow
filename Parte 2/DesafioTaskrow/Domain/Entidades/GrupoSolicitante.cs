@@ -1,4 +1,6 @@
-﻿namespace DesafioTaskrow.Domain.Entidades;
+﻿using System.Text.Json.Serialization;
+
+namespace DesafioTaskrow.Domain.Entidades;
 
 public class GrupoSolicitante : EntidadeBase
 {

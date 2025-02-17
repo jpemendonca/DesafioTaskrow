@@ -1,13 +1,15 @@
-﻿using DesafioTaskrow.Domain.Models;
+﻿using DesafioTaskrow.Domain.Dtos;
+using DesafioTaskrow.Domain.Models;
 
 namespace DesafioTaskrow.Application.Interfaces;
 
 public interface IGrupoSolicitanteService
 {
-    Task<List<GrupoSolicitante>> ObterGruposSolicitantes(string? nome);
-    Task<GrupoSolicitante>? ObterGrupoSolicitante(Guid id);
+    Task<List<GrupoSolicitanteRetorno>> ObterGruposSolicitantes(string? nome);
+    Task<GrupoSolicitante?> ObterPorId(Guid id);
     Task<GrupoSolicitante>? ObterGruposSolicitantesFilhos(Guid grupoPaiId);
-    // Task CriarGrupoSolicitante(GrupoSolicitante g);
+    Task<Guid> CriarGrupoSolicitante(GrupoSolicitanteDto grupoSolicitanteDto);
     // Task EditarGrupoSolicitante(GrupoSolicitante g);
     Task RemoverGrupoSolicitante(Guid id);
+    Task<int> CalcularNivelHierarquia(Guid grupoPaiId);
 }
