@@ -10,10 +10,12 @@ namespace DesafioTaskrow.Application.Servicos;
 public class GrupoSolicitanteService : IGrupoSolicitanteService
 {
     private readonly Contexto _contexto;
+    private readonly IVerificacaoGrupoSolicitanteService _verificacaoService;
 
-    public GrupoSolicitanteService(Contexto contexto)
+    public GrupoSolicitanteService(Contexto contexto, IVerificacaoGrupoSolicitanteService verificacaoService)
     {
         _contexto = contexto;
+        _verificacaoService = verificacaoService;
     }
     
     public async Task<List<GrupoSolicitanteRetorno>> ObterGruposSolicitantes(string? nome)
@@ -65,11 +67,17 @@ public class GrupoSolicitanteService : IGrupoSolicitanteService
             {
                 throw new GrupoPaiNaoEncontradoException("O grupo pai informado não existe.");
             }
-            nivelHierarquia = await CalcularNivelHierarquia(grupoPai.Id);
+            
+            // if (await _verificacaoService.ExisteCicloNaHierarquia(grupoSolicitanteDto.GrupoPaiId.Value))
+            // {
+            //     throw new HierarquiaCiclicaException("A hierarquia de grupos não pode conter ciclos.");
+            // }
+            
+            nivelHierarquia = await _verificacaoService.CalcularNivelHierarquia(grupoPai.Id);
 
             if (nivelHierarquia >= 5)
             {
-                throw new HierarquiaMaximaException("O grupo pai informado não existe.");
+                throw new HierarquiaMaximaException("A hierarquia não pode ter mais de 5 níveis.");
             }
         }
 
@@ -88,19 +96,5 @@ public class GrupoSolicitanteService : IGrupoSolicitanteService
     public Task RemoverGrupoSolicitante(Guid id)
     {
         throw new NotImplementedException();
-    }
-
-    public async Task<int> CalcularNivelHierarquia(Guid grupoPaiId)
-    {
-        int nivel = 1;
-        var grupoAtual = await _contexto.GruposSolicitantes.FirstOrDefaultAsync(x => x.Id == grupoPaiId);
-
-        while (grupoAtual?.GruposSolicitantePai != null)
-        {
-            nivel++;
-            grupoAtual = await _contexto.GruposSolicitantes.FirstOrDefaultAsync(g => g.Id == grupoAtual.GrupoSolicitantePaiId);
-        }
-
-        return nivel;
     }
 }

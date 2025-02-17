@@ -50,6 +50,11 @@ public class GrupoSolicitanteController : ControllerBase
             await _logService.LogError("CriarGrupoSolicitante", "Erro ao criar grupo solicitante: " + ex.Message);
             return BadRequest(new { mensagem = ex.Message });
         }
+        // catch (HierarquiaCiclicaException ex)
+        // {
+        //     await _logService.LogError("CriarGrupoSolicitante", "Erro ao criar grupo solicitante: " + ex.Message);
+        //     return BadRequest(new { mensagem = ex.Message });
+        // }
         catch (Exception ex)
         {
             await _logService.LogError("CriarGrupoSolicitante", "Erro inesperado ao criar grupo solicitante: " + ex.Message);

@@ -18,6 +18,7 @@ builder.Services.AddDbContext<Contexto>(options => { options.UseSqlServer(connec
 
 builder.Services.AddScoped<ILogService, LogService>();
 builder.Services.AddScoped<IGrupoSolicitanteService, GrupoSolicitanteService>();
+builder.Services.AddScoped<IVerificacaoGrupoSolicitanteService, VerificacaoGrupoSolicitanteService>();
 
 
 var app = builder.Build();

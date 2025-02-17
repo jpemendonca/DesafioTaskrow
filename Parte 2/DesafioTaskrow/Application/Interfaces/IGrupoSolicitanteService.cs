@@ -11,5 +11,4 @@ public interface IGrupoSolicitanteService
     Task<Guid> CriarGrupoSolicitante(GrupoSolicitanteDto grupoSolicitanteDto);
     // Task EditarGrupoSolicitante(GrupoSolicitante g);
     Task RemoverGrupoSolicitante(Guid id);
-    Task<int> CalcularNivelHierarquia(Guid grupoPaiId);
 }
