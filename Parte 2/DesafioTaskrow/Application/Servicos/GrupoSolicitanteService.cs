@@ -38,16 +38,31 @@ public class GrupoSolicitanteService : IGrupoSolicitanteService
         return retorno;
     }
 
-    public async Task<GrupoSolicitante?> ObterPorId(Guid id)
+    public async Task<GrupoSolicitanteRetorno?> ObterPorId(Guid id)
     {
-        var grupo = await _contexto.GruposSolicitantes.FindAsync(id);
+        var grupo = await _contexto.GruposSolicitantes.Select(x => new GrupoSolicitanteRetorno
+        {
+            Id = x.Id,
+            Nome = x.Nome,
+            GrupoPaiId = x.GrupoSolicitantePaiId
+        }).FirstOrDefaultAsync(x => x.Id == id);
 
         return grupo;
     }
 
-    public Task<GrupoSolicitante>? ObterGruposSolicitantesFilhos(Guid grupoPaiId)
+    public async Task<List<GrupoSolicitanteRetorno>> ObterGruposSolicitantesFilhos(Guid grupoPaiId)
     {
-        throw new NotImplementedException();
+        var filhos = await _contexto.GruposSolicitantes
+            .Where(x => x.GrupoSolicitantePaiId == grupoPaiId)
+            .Select(x => new GrupoSolicitanteRetorno
+            {
+                Id = x.Id,
+                Nome = x.Nome,
+                GrupoPaiId = x.GrupoSolicitantePaiId,
+            })
+            .ToListAsync();
+
+        return filhos;
     }
 
     public async Task<Guid> CriarGrupoSolicitante(GrupoSolicitanteDto grupoSolicitanteDto)
@@ -107,8 +122,16 @@ public class GrupoSolicitanteService : IGrupoSolicitanteService
     }
 
 
-    public Task RemoverGrupoSolicitante(Guid id)
+    public async Task RemoverGrupoSolicitante(Guid id)
     {
-        throw new NotImplementedException();
+        var grupo = await _contexto.GruposSolicitantes.FindAsync(id);
+
+        if (grupo is null)
+        {
+            throw new GrupoNaoEncontradoException("O grupo solicitante não foi encontrado.");
+        }
+        
+        _contexto.GruposSolicitantes.Remove(grupo);
+        await _contexto.SaveChangesAsync();
     }
 }
