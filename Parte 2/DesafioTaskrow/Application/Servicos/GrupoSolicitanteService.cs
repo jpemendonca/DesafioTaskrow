@@ -57,28 +57,10 @@ public class GrupoSolicitanteService : IGrupoSolicitanteService
             throw new NomeObrigatorioException("O nome do grupo solicitante é obrigatório.");
         }
         
-        int nivelHierarquia = 1;
-        
-        if(grupoSolicitanteDto.GrupoPaiId is not null) 
+        if(grupoSolicitanteDto.GrupoPaiId is not null)
         {
-            var grupoPai = await _contexto.GruposSolicitantes.FindAsync(grupoSolicitanteDto.GrupoPaiId);
-
-            if (grupoPai is null)
-            {
-                throw new GrupoPaiNaoEncontradoException("O grupo pai informado não existe.");
-            }
-            
-            // if (await _verificacaoService.ExisteCicloNaHierarquia(grupoSolicitanteDto.GrupoPaiId.Value))
-            // {
-            //     throw new HierarquiaCiclicaException("A hierarquia de grupos não pode conter ciclos.");
-            // }
-            
-            nivelHierarquia = await _verificacaoService.CalcularNivelHierarquia(grupoPai.Id);
-
-            if (nivelHierarquia >= 5)
-            {
-                throw new HierarquiaMaximaException("A hierarquia não pode ter mais de 5 níveis.");
-            }
+            await _verificacaoService.VerificarGrupoPaiExiste(grupoSolicitanteDto.GrupoPaiId.Value); // Se nao houver grupo pai lança um erro
+            await _verificacaoService.VerificarHierarquia(grupoSolicitanteDto.GrupoPaiId.Value); // Lança um erro se houver problemas
         }
 
         var novoGrupo = new GrupoSolicitante
@@ -92,6 +74,38 @@ public class GrupoSolicitanteService : IGrupoSolicitanteService
         
         return novoGrupo.Id;
     }
+
+    public async Task EditarGrupoSolicitante(Guid id, GrupoSolicitanteDto grupoSolicitanteDto)
+    {
+        var grupo = await _contexto.GruposSolicitantes.FindAsync(id);
+    
+        if (grupo is null)
+        {
+            throw new GrupoNaoEncontradoException("O grupo solicitante não foi encontrado.");
+        }
+    
+        if (string.IsNullOrWhiteSpace(grupoSolicitanteDto.Nome))
+        {
+            throw new NomeObrigatorioException("O nome do grupo solicitante é obrigatório.");
+        }
+
+        if (grupoSolicitanteDto.GrupoPaiId == id)
+        {
+            throw new HierarquiaCiclicaException("O grupo não pode ser seu próprio pai.");
+        }
+
+        if (grupoSolicitanteDto.GrupoPaiId is not null)
+        {
+            await _verificacaoService.VerificarGrupoPaiExiste(grupoSolicitanteDto.GrupoPaiId.Value);
+            await _verificacaoService.VerificarHierarquia(grupoSolicitanteDto.GrupoPaiId.Value);
+        }
+
+        grupo.Nome = grupoSolicitanteDto.Nome;
+        grupo.GrupoSolicitantePaiId = grupoSolicitanteDto.GrupoPaiId;
+    
+        await _contexto.SaveChangesAsync();
+    }
+
 
     public Task RemoverGrupoSolicitante(Guid id)
     {

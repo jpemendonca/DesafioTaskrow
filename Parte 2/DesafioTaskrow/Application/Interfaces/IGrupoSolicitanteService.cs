@@ -9,6 +9,6 @@ public interface IGrupoSolicitanteService
     Task<GrupoSolicitante?> ObterPorId(Guid id);
     Task<GrupoSolicitante>? ObterGruposSolicitantesFilhos(Guid grupoPaiId);
     Task<Guid> CriarGrupoSolicitante(GrupoSolicitanteDto grupoSolicitanteDto);
-    // Task EditarGrupoSolicitante(GrupoSolicitante g);
+    Task EditarGrupoSolicitante(Guid id, GrupoSolicitanteDto grupoSolicitanteDto);
     Task RemoverGrupoSolicitante(Guid id);
 }

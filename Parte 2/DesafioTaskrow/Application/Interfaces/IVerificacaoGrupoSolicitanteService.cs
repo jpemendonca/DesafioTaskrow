@@ -2,6 +2,8 @@
 
 public interface IVerificacaoGrupoSolicitanteService
 {
-    Task<int> CalcularNivelHierarquia(Guid grupoPaiId);
-    Task<bool> ExisteCicloNaHierarquia(Guid grupoPaiId);
+    Task VerificarNivelHierarquia(Guid grupoPaiId);
+    Task VerificarExisteCicloNaHierarquia(Guid grupoPaiId);
+    Task VerificarHierarquia(Guid grupoPaiId);
+    Task VerificarGrupoPaiExiste(Guid grupoPaiId);
 }
