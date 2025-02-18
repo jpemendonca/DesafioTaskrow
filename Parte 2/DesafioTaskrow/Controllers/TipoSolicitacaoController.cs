@@ -23,7 +23,7 @@ public class TipoSolicitacaoController : ControllerBase
 
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<TipoSolicitacaoRetorno>))]
-    public async Task<IActionResult> ObterTiposSolicitacao([FromQuery] string? nome)
+    public async Task<IActionResult> ObterTiposSolicitacao()
     {
         try
         {
@@ -43,30 +43,33 @@ public class TipoSolicitacaoController : ControllerBase
     }
 
 
-[HttpPost]
-[ProducesResponseType(StatusCodes.Status201Created)]
-[ProducesResponseType(StatusCodes.Status400BadRequest)]
-[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-public async Task<IActionResult> CriarTiposSolicitacao([FromBody] string nome)
-{
-    try
+    [HttpPost]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> CriarTiposSolicitacao([FromQuery] string nome)
     {
-        if (string.IsNullOrWhiteSpace(nome))
+        try
         {
-            await _logService.LogWarning("CriarTiposSolicitacao", "Tentativa de criação sem nome informado.");
-            return BadRequest(new { mensagem = "O nome do tipo de solicitação é obrigatório." });
-        }
+            if (string.IsNullOrWhiteSpace(nome))
+            {
+                await _logService.LogWarning("CriarTiposSolicitacao", "Tentativa de criação sem nome informado.");
+                return BadRequest(new { mensagem = "O nome do tipo de solicitação é obrigatório." });
+            }
 
-        await _service.CriarTiposSolicitacao(nome);
-        await _logService.LogInfo("CriarTiposSolicitacao", $"Tipo de solicitação '{nome}' criado com sucesso.");
-        return StatusCode(StatusCodes.Status201Created);
+            Guid id = await _service.CriarTiposSolicitacao(nome);
+            
+            await _logService.LogInfo("CriarTiposSolicitacao", $"Tipo de solicitação '{nome}' id = {id} criado com sucesso.");
+        
+            return CreatedAtAction(nameof(CriarTiposSolicitacao), new { id }, new { id });
+        }
+        catch (Exception ex)
+        {
+            await _logService.LogError("CriarTiposSolicitacao", $"Erro ao criar tipo de solicitação. Erro = {ex.Message}");
+            return StatusCode(StatusCodes.Status500InternalServerError, new { mensagem = "Erro interno no servidor." });
+        }
     }
-    catch (Exception ex)
-    {
-        await _logService.LogError("CriarTiposSolicitacao", $"Erro ao criar tipo de solicitação. Erro = {ex.Message}");
-        return StatusCode(StatusCodes.Status500InternalServerError, new { mensagem = "Erro interno no servidor." });
-    }
-}
+
 
 [HttpPut("{id:guid}")]
 [ProducesResponseType(StatusCodes.Status204NoContent)]

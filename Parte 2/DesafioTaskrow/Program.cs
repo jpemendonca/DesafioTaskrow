@@ -17,8 +17,12 @@ var connectionString = builder.Configuration.GetConnectionString("Connection");
 builder.Services.AddDbContext<Contexto>(options => { options.UseSqlServer(connectionString); });
 
 builder.Services.AddScoped<ILogService, LogService>();
-builder.Services.AddScoped<IGrupoSolicitanteService, GrupoSolicitanteService>();
+
 builder.Services.AddScoped<IVerificacaoGrupoSolicitanteService, VerificacaoGrupoSolicitanteService>();
+
+builder.Services.AddScoped<IGrupoSolicitanteService, GrupoSolicitanteService>();
+builder.Services.AddScoped<ITipoSolicitacaoService, TipoSolicitacaoService>();
+
 
 
 var app = builder.Build();

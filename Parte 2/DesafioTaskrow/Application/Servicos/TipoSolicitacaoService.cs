@@ -28,7 +28,7 @@ public class TipoSolicitacaoService : ITipoSolicitacaoService
         return tiposSolicitacao;
     }
 
-    public async Task CriarTiposSolicitacao(string nome)
+    public async Task<Guid> CriarTiposSolicitacao(string nome)
     {
         var tipoSolicitacao = new TipoSolicitacao()
         {
@@ -37,6 +37,8 @@ public class TipoSolicitacaoService : ITipoSolicitacaoService
 
         await _contexto.TiposSolicitacoes.AddAsync(tipoSolicitacao);
         await _contexto.SaveChangesAsync();
+        
+        return tipoSolicitacao.Id;
     }
 
     public async Task EditarTiposSolicitacao(Guid id, string nome, bool ativo)
