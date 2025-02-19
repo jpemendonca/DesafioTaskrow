@@ -19,9 +19,12 @@ builder.Services.AddDbContext<Contexto>(options => { options.UseSqlServer(connec
 builder.Services.AddScoped<ILogService, LogService>();
 
 builder.Services.AddScoped<IVerificacaoGrupoSolicitanteService, VerificacaoGrupoSolicitanteService>();
+builder.Services.AddScoped<IVerificacaoSolicitacaoService, VerificacaoSolicitacaoService>();
 
 builder.Services.AddScoped<IGrupoSolicitanteService, GrupoSolicitanteService>();
 builder.Services.AddScoped<ITipoSolicitacaoService, TipoSolicitacaoService>();
+builder.Services.AddScoped<ISolicitacaoService, SolicitacaoService>();
+builder.Services.AddScoped<ILimiteService, LimiteService>();
 
 
 

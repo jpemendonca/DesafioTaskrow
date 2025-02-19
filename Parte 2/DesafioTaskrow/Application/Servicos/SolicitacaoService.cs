@@ -10,10 +10,12 @@ namespace DesafioTaskrow.Application.Servicos;
 public class SolicitacaoService : ISolicitacaoService
 {
     private readonly Contexto _context;
+    private readonly IVerificacaoSolicitacaoService _verificacaoService;
 
-    public SolicitacaoService(Contexto contexto)
+    public SolicitacaoService(Contexto contexto, IVerificacaoSolicitacaoService verificacaoService)
     {
         _context = contexto;
+        _verificacaoService = verificacaoService;
     }
 
     public async Task<List<SolicitacaoRetorno>> ObterSolicitacoes()
@@ -32,61 +34,9 @@ public class SolicitacaoService : ISolicitacaoService
         return solicitacoes;
     }
 
-    public async Task CriarSolicitacao(SolicitacaoDto solicitacao)
+    public async Task<Guid> CriarSolicitacao(SolicitacaoDto solicitacao)
     {
-        bool existeGrupoSolicitante =
-            await _context.GruposSolicitantes.AnyAsync(x => x.Id == solicitacao.GrupoSolicitanteId);
-
-        if (!existeGrupoSolicitante)
-        {
-            throw new KeyNotFoundException("Grupo solicitante não encontrado.");
-        }
-
-        bool existeTipoSolicitacao =
-            await _context.TiposSolicitacoes.AnyAsync(x => x.Id == solicitacao.TipoSolicitacaoId);
-
-        if (!existeTipoSolicitacao)
-        {
-            throw new KeyNotFoundException("Tipo de solicitação não encontrado.");
-        }
-
-        int mes = DateTime.Now.Month;
-        int ano = DateTime.Now.Year;
-
-        var limiteMensal = _context.LimitesGrupos
-            .FirstOrDefault(x => x.GrupoSolicitanteId == solicitacao.GrupoSolicitanteId && x.Ano == ano && x.Mes == mes)
-            ?.LimiteMensal;
-        
-        if (limiteMensal is null)
-        {
-            Guid? grupoPaiId = _context.GruposSolicitantes.FirstOrDefault(x => x.Id == solicitacao.GrupoSolicitanteId)
-                ?.GrupoSolicitantePaiId;
-
-            if (grupoPaiId is not null)
-            {
-                limiteMensal = await _context.LimitesGrupos
-                    .Where(x => x.GrupoSolicitante.GrupoSolicitantePaiId == grupoPaiId && x.Ano == ano && x.Mes == mes)
-                    .Select(x => x.LimiteMensal)
-                    .FirstOrDefaultAsync();
-            }
-            
-        }
-        
-        // Nao foi cadastrado e nem tem limite no grupo pai
-        if (limiteMensal is null)
-        {
-            throw new KeyNotFoundException("Você precisa cadastrar um limite mensal para essa solicitação");
-        }
-        
-        int quantidadeMensalSolicitacaoGrupo = await _context.Solicitacoes
-            .CountAsync(x => x.GrupoSolicitanteId == solicitacao.GrupoSolicitanteId 
-                             && x.DataCriacao.Year == ano 
-                             && x.DataCriacao.Month == mes);
-
-        if (quantidadeMensalSolicitacaoGrupo >= limiteMensal)
-        {
-            throw new LimiteSolicitacaoExcedidoException("O limite de solicitações criadas para esse grupo no mês atual já foi excedido");
-        }
+        await _verificacaoService.VerificarSolicitacao(solicitacao);
         
         var novaSolicitacao = new Solicitacao
         {
@@ -99,15 +49,41 @@ public class SolicitacaoService : ISolicitacaoService
 
         _context.Solicitacoes.Add(novaSolicitacao);
         await _context.SaveChangesAsync();
+        
+        return novaSolicitacao.Id;
     }
 
-    public Task RemoverSolicitacao(Guid id)
+    public async Task RemoverSolicitacao(Guid id)
     {
-        throw new NotImplementedException();
+        var solicitacao = _context.Solicitacoes.FirstOrDefault(x => x.Id == id);
+
+        if (solicitacao is null)
+        {
+            throw new KeyNotFoundException("Solicitação não encontrada");
+        }
+        
+        _context.Solicitacoes.Remove(solicitacao);
+        await _context.SaveChangesAsync();
     }
 
-    public Task EditarSolicitacao(Guid id, SolicitacaoDto solicitacao)
+    public async Task EditarSolicitacao(Guid id, SolicitacaoDto solicitacao)
     {
-        throw new NotImplementedException();
+        var solicitacaoCadastrada  = await _context.Solicitacoes.FirstOrDefaultAsync(x => x.Id == id);
+        
+        if (solicitacaoCadastrada is null)
+        {
+            throw new KeyNotFoundException("Solicitação não encontrada");
+        }
+        
+        await _verificacaoService.VerificarSolicitacao(solicitacao);
+        
+        solicitacaoCadastrada.Descricao = solicitacao.Descricao;
+        solicitacaoCadastrada.GrupoSolicitanteId = solicitacao.GrupoSolicitanteId;
+        solicitacaoCadastrada.Status = solicitacao.Status;
+        solicitacaoCadastrada.TipoSolicitacaoId = solicitacao.TipoSolicitacaoId;
+        solicitacaoCadastrada.DataConclusao = solicitacao.DataConclusao;
+        
+        _context.Solicitacoes.Update(solicitacaoCadastrada);
+        await _context.SaveChangesAsync();
     }
 }
