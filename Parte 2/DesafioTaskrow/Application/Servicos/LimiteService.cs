@@ -1,6 +1,6 @@
 ﻿using DesafioTaskrow.Application.Interfaces;
 using DesafioTaskrow.Domain;
-using DesafioTaskrow.Domain.Dtos;
+using DesafioTaskrow.Application.Dtos;
 using DesafioTaskrow.Domain.Exceptions;
 using DesafioTaskrow.Domain.Models;
 using Microsoft.EntityFrameworkCore;
@@ -65,7 +65,7 @@ public class LimiteService : ILimiteService
 
         if (limiteGrupo.LimiteMensal < quantidadeSolicitacoesMes)
         {
-            throw new Exception("A quantidade de solicitações já cadastradas é maior que a informada na edição");
+            throw new ArgumentException("A quantidade de solicitações já cadastradas é maior que a informada na edição");
         }
         
         var limite = await _context.LimitesGrupos.FirstOrDefaultAsync(x => x.Id == id);
@@ -100,7 +100,7 @@ public class LimiteService : ILimiteService
 
         if (quantidadeSolicitacoesMes > 0)
         {
-            throw new Exception("Já existe solicitações dentro desse limite, não pode ser removido");
+            throw new ArgumentException("Já existe solicitações dentro desse limite, não pode ser removido");
         }
         
         _context.LimitesGrupos.Remove(limite);

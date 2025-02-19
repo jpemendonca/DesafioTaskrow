@@ -1,5 +1,5 @@
 ﻿using DesafioTaskrow.Application.Interfaces;
-using DesafioTaskrow.Domain.Dtos;
+using DesafioTaskrow.Application.Dtos;
 using DesafioTaskrow.Domain.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 

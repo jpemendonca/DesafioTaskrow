@@ -1,6 +1,6 @@
 ﻿using DesafioTaskrow.Domain.Enums;
 
-namespace DesafioTaskrow.Domain.Dtos;
+namespace DesafioTaskrow.Application.Dtos;
 
 public class SolicitacaoRetorno
 {

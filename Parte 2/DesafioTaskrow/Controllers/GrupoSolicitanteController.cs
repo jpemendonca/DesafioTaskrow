@@ -1,6 +1,6 @@
 ﻿using DesafioTaskrow.Domain;
 using DesafioTaskrow.Application.Interfaces;
-using DesafioTaskrow.Domain.Dtos;
+using DesafioTaskrow.Application.Dtos;
 using DesafioTaskrow.Domain.Exceptions;
 using DesafioTaskrow.Domain.Models;
 using Microsoft.AspNetCore.Mvc;

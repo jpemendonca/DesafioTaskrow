@@ -1,5 +1,5 @@
 ﻿using DesafioTaskrow.Application.Interfaces;
-using DesafioTaskrow.Domain.Dtos;
+using DesafioTaskrow.Application.Dtos;
 using DesafioTaskrow.Domain.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 
@@ -28,7 +28,7 @@ public class LimitesController : ControllerBase
         }
         catch (Exception ex)
         {
-            await _logService.LogError("ObterLimitesGrupos", "Erro ao obter limites de grupos.");
+            await _logService.LogError("ObterLimitesGrupos", $"Erro ao obter limites de grupos. {ex.Message}");
             return StatusCode(500, "Erro interno ao processar a solicitação.");
         }
     }
@@ -66,10 +66,14 @@ public class LimitesController : ControllerBase
             await _logService.LogError("EditarLimiteGrupo", $"Erro ao editar limite grupo. {ex.Message}");
             return NotFound(ex.Message);
         }
+        catch (ArgumentException ex)
+        {
+            await _logService.LogError("EditarLimiteGrupo", $"Erro ao editar limite grupo. {ex.Message}");
+            return BadRequest(ex.Message);
+        }
         catch (Exception ex)
         {
             await _logService.LogError("EditarLimiteGrupo", $"Erro ao editar limite grupo. {ex.Message}");
-
             return StatusCode(500, "Erro interno ao processar a solicitação.");
         }
     }
@@ -86,6 +90,11 @@ public class LimitesController : ControllerBase
         {
             await _logService.LogError("RemoverLimiteGrupo", $"Erro ao remover limite grupo. {ex.Message}");
             return NotFound(ex.Message);
+        }
+        catch (ArgumentException ex)
+        {
+            await _logService.LogError("RemoverLimiteGrupo", $"Erro ao remover limite grupo. {ex.Message}");
+            return BadRequest(ex.Message);
         }
         catch (Exception ex)
         {

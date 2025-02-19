@@ -1,4 +1,4 @@
-﻿using DesafioTaskrow.Domain.Dtos;
+﻿using DesafioTaskrow.Application.Dtos;
 
 namespace DesafioTaskrow.Application.Interfaces;
 
