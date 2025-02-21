@@ -1,0 +1,31 @@
+﻿@model List<string>
+
+@{
+    ViewData["Title"] = "Selecionar Arquivos";
+}
+
+<h2>Selecionar Arquivos</h2>
+
+<form asp-action="MostrarColunas" method="post">
+    <div>
+        <label for="arquivo1">Arquivo 1:</label>
+        <select id="arquivo1" name="arquivo1">
+            @foreach (var file in Model)
+            {
+                <option value="@file">@file</option>
+            }
+        </select>
+    </div>
+    <br />
+    <div>
+        <label for="arquivo2">Arquivo 2:</label>
+        <select id="arquivo2" name="arquivo2">
+            @foreach (var file in Model)
+            {
+                <option value="@file">@file</option>
+            }
+        </select>
+    </div>
+    <br />
+    <button class="btn btn-primary" type="submit">Avançar</button>
+</form>

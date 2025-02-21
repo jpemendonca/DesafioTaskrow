@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DesafioTaskrow", "DesafioTa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Parte3DesafioTaskrow", "..\..\Parte 3\Parte3DesafioTaskrow\Parte3DesafioTaskrow.csproj", "{5B797014-18A7-45A3-8883-06D1251D225B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Parte1MVCProjeto", "..\..\Parte 1\Parte1MVCProjeto\Parte1MVCProjeto.csproj", "{1E033045-A84C-4D4B-8EBA-E2B644BAFCF4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{5B797014-18A7-45A3-8883-06D1251D225B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5B797014-18A7-45A3-8883-06D1251D225B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5B797014-18A7-45A3-8883-06D1251D225B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E033045-A84C-4D4B-8EBA-E2B644BAFCF4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E033045-A84C-4D4B-8EBA-E2B644BAFCF4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E033045-A84C-4D4B-8EBA-E2B644BAFCF4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E033045-A84C-4D4B-8EBA-E2B644BAFCF4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

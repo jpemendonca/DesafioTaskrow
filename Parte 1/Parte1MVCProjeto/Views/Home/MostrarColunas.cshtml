@@ -1,0 +1,40 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model Parte1MVCProjeto.Controllers.HomeController.ArquivosViewModel
+
+<h2>Arquivo 1</h2>
+<p>Nome: @Model.NomeArquivo1</p>
+<p>Colunas:</p>
+<ul>
+    @foreach (var coluna in Model.ColunasArquivo1)
+    {
+        <li>@coluna</li>
+    }
+</ul>
+<label>Coluna do arquivo1:</label>
+<select name="ColunaArquivo1">
+    @foreach (var coluna in Model.ColunasArquivo1)
+    {
+        <option value="@coluna">@coluna</option>
+    }
+</select>
+
+<input type="hidden" name="Arquivo1" value="@Model.NomeArquivo1" />
+
+<h2>Arquivo 2</h2>
+<p>Nome: @Model.NomeArquivo2</p>
+<p>Colunas:</p>
+<ul>
+    @foreach (var coluna in Model.ColunasArquivo2)
+    {
+        <li>@coluna</li>
+    }
+</ul>
+<label>Coluna do arquivo2:</label>
+<select name="ColunaArquivo2">
+    @foreach (var coluna in Model.ColunasArquivo2)
+    {
+        <option value="@coluna">@coluna</option>
+    }
+</select>
+
+<input type="hidden" name="Arquivo2" value="@Model.NomeArquivo2" />
