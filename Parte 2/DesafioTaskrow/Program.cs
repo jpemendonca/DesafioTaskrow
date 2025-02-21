@@ -26,8 +26,6 @@ builder.Services.AddScoped<ITipoSolicitacaoService, TipoSolicitacaoService>();
 builder.Services.AddScoped<ISolicitacaoService, SolicitacaoService>();
 builder.Services.AddScoped<ILimiteService, LimiteService>();
 
-
-
 var app = builder.Build();
 
 app.MapOpenApi();
